@@ -1,0 +1,442 @@
+% !TeX program = xelatex
+% !TeX encoding = UTF-8
+% =====================================================================
+%  编译方式: XeLaTeX
+%  说明: 全文已脱敏, 不含真实姓名 / 单位 / 联系方式 / 密钥
+% =====================================================================
+\documentclass[11pt,a4paper,openany]{ctexrep}
+
+% ----------------------------- 基础宏包 -------------------------------
+\usepackage[margin=2.5cm,top=2.8cm,bottom=2.8cm]{geometry}
+\usepackage{fontspec}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{caption}
+
+% ----------------------------- TikZ 库 --------------------------------
+\usetikzlibrary{
+  positioning, arrows.meta, calc, fit, backgrounds,
+  shapes.geometric, shapes.misc, shadows, trees, matrix
+}
+
+% ----------------------------- 正式配色方案 -------------------------------
+% 主色调：深蓝+深灰，符合正式报告规范
+\definecolor{official_blue}{RGB}{0, 51, 102}
+\definecolor{official_blue_light}{RGB}{217, 226, 243}
+\definecolor{official_gray}{RGB}{51, 51, 51}
+\definecolor{official_gray_light}{RGB}{242, 242, 242}
+\definecolor{official_red}{RGB}{153, 0, 0}
+\definecolor{official_green}{RGB}{0, 102, 51}
+\definecolor{table_head}{RGB}{28, 56, 89}
+\definecolor{table_alt}{RGB}{247, 248, 250}
+\definecolor{code_bg}{RGB}{31, 31, 31}
+
+% ----------------------------- 字体设置 -------------------------------
+% 正式文档：正文宋体，标题黑体，英文 Times New Roman
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+\setmonofont{Courier New}
+\ctexset{
+  chapter/format = \huge\heiti\bfseries\color{official_blue},
+  section/format = \Large\heiti\bfseries\color{official_gray},
+  subsection/format = \large\heiti\bfseries\color{official_gray}
+}
+
+% ----------------------------- 超链接 ---------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=official_blue,
+  urlcolor=official_blue,
+  citecolor=official_blue,
+  pdftitle={智能在线银行系统-技术报告},
+  pdfauthor={Dev Team}
+}
+
+% ----------------------------- 页眉页脚 -------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{15pt}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\headrule}{\color{official_blue}\hrule height \headrulewidth}
+\fancyhead[L]{\small\heiti\color{official_gray} 智能在线银行系统 · 技术报告}
+\fancyhead[R]{\small\color{official_gray} \leftmark}
+\fancyfoot[C]{\thepage}
+\fancypagestyle{plain}{\pagestyle{fancy}}
+
+% --------------------------- 章节标题样式 -----------------------------
+\titleformat{\chapter}[hang]
+  {\huge\heiti\bfseries\color{official_blue}}
+  {\thechapter}
+  {0.8em}
+  {}
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+
+\titleformat{\section}[hang]
+  {\Large\heiti\bfseries\color{official_gray}}
+  {\thesection}
+  {0.6em}
+  {}
+\titlespacing*{\section}{0pt}{18pt}{10pt}
+
+\titleformat{\subsection}[hang]
+  {\large\heiti\bfseries\color{official_gray}}
+  {\thesubsection}
+  {0.5em}
+  {}
+\titlespacing*{\subsection}{0pt}{12pt}{8pt}
+
+% --------------------------- tcolorbox 正式样式 ---------------------------
+% 信息框
+\newtcolorbox{infobox}[1][信息说明]{
+  enhanced, breakable,
+  colback=official_blue_light!30, colframe=official_blue,
+  boxrule=0.8pt, arc=2pt, left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\textbf{#1}}, fonttitle=\heiti\bfseries\color{white},
+  coltitle=white, attach boxed title to top left={xshift=10pt,yshift=-3mm},
+  interior style={left color=official_blue_light!20, right color=white}
+}
+
+% 警告框
+\newtcolorbox{warnbox}{
+  enhanced, breakable,
+  colback=red!5, colframe=official_red,
+  boxrule=0.8pt, arc=2pt, left=12pt, right=12pt, top=8pt, bottom=8pt,
+  interior style={left color=red!8, right color=white}
+}
+
+% 成果框
+\newtcolorbox{achbox}{
+  enhanced, breakable,
+  colback=green!5, colframe=official_green,
+  boxrule=0.8pt, arc=2pt, left=12pt, right=12pt, top=8pt, bottom=8pt,
+  interior style={left color=green!8, right color=white}
+}
+
+% 代码框
+\newtcolorbox{codebox}[1][终端命令]{
+  enhanced,
+  colback=white,               % 背景：亮色白底
+  colframe=official_gray!80,  % 边框浅灰
+  boxrule=1pt, arc=2pt, 
+  left=8pt, right=8pt, top=22pt, bottom=8pt,
+  title={\texttt{\color{gray!80}#1}}, 
+  fonttitle=\bfseries,
+  coltitle=gray!80, 
+  attach boxed title to top left={xshift=10pt,yshift=-2.5mm},
+  listing only,
+  listing options={
+    basicstyle=\ttfamily\small\color{black}, % 基础文字黑色
+    keywordstyle=\color{blue!80},            % 关键字蓝色（linux亮色终端风格）
+    commentstyle=\color{green!60},           % 注释绿色
+    stringstyle=\color{red!80},              % 字符串红色
+    showstringspaces=false, 
+    language=bash, 
+    frame=none
+  }
+}
+
+
+% --------------------------- 列表样式 ---------------------------------
+\setlist[itemize]{leftmargin=1.8em, itemsep=4pt, topsep=4pt}
+\setlist[enumerate]{leftmargin=2.0em, itemsep=5pt, topsep=4pt}
+\newcommand{\tagdot}[2]{\tikz[baseline=-0.5ex]\node[circle,fill=#1,inner sep=3pt]{};~\textbf{#2}}
+
+% --------------------------- 代码清单样式 -----------------------------
+\lstdefinestyle{yamlstyle}{
+  basicstyle=\ttfamily\footnotesize\color{official_gray},
+  backgroundcolor=\color{official_gray_light},
+  keywordstyle=\color{official_blue}\bfseries,
+  commentstyle=\color{official_green!70},
+  frame=single, rulecolor=\color{official_gray!30},
+  framesep=8pt, showstringspaces=false, breaklines=true, tabsize=2
+}
+
+% =====================================================================
+%                               封 面
+% =====================================================================
+\begin{document}
+\begin{titlepage}
+  \centering
+  \vspace*{1.5cm}
+  
+  % 抬头
+  {\Large\heiti\color{official_gray} 课程设计技术报告}\\[0.8cm]
+  {\color{official_blue}\rule{0.6\textwidth}{1.5pt}}\\[1.2cm]
+  
+  % 主标题
+  {\fontsize{36pt}{42pt}\heiti\bfseries\color{official_blue} 智能在线银行系统}\\[0.6cm]
+  {\fontsize{18pt}{22pt}\bfseries\color{official_gray} Smart Online Banking System}\\[0.8cm]
+  
+  % 副标题
+  {\large\heiti\color{official_gray} AI驱动 · 前后端分离 · 全流程银行业务实践}\\[1.5cm]
+  {\color{official_blue!60}\rule{0.4\textwidth}{1pt}}\\[1.5cm]
+  
+  % 项目信息表
+  \begin{tcolorbox}[
+    width=0.65\textwidth, center,
+    colback=white, colframe=official_blue,
+    boxrule=1pt, arc=3pt
+  ]
+    \centering
+    \renewcommand{\arraystretch}{1.6}
+    \begin{tabular}{>{\heiti\color{official_blue}}r l}
+      项目类型 & 个人项目 · 前后端分离工程 \\
+      团队规模 & 4 人开发组 \\
+      担任角色 & 项目组长 \\
+      交付规模 & 39 个 REST 接口 · 16 个页面 \\
+      完成日期 & 2026 年 6 月 \\
+    \end{tabular}
+  \end{tcolorbox}
+  
+  \vfill
+  
+  % 底部
+  {\small\color{official_gray!70} 本文档所有数据均为模拟数据 · 仅供学习与技术研究使用}
+\end{titlepage}
+
+% =====================================================================
+%                               目 录
+% =====================================================================
+\tableofcontents
+\thispagestyle{fancy}
+\clearpage
+
+% =====================================================================
+%                          一、项目简介
+% =====================================================================
+\chapter{项目简介}
+
+\begin{infobox}[一句话定位]
+基于 \textbf{Spring Boot 3 + Vue 3 + 大模型} 的智能在线银行系统，实现银行业务全流程数字化与 AI 智能客服落地。
+\end{infobox}
+
+本项目为前后端分离工程，通过 \textbf{Spring AI} 接入大模型，提供智能客服、账户管理、转账交易、账单查询、贷款管理等功能。系统共包含 \textbf{39 个 REST 接口、16 个前端页面}，由 4 人小组协作完成；本人担任项目组长，负责架构设计、AI 客服模块开发与测试工作。
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\rowcolors{2}{table_alt}{white}
+\begin{tabular}{>{\centering\arraybackslash}p{3cm} >{\centering\arraybackslash}p{3cm}
+>{\centering\arraybackslash}p{3cm} >{\centering\arraybackslash}p{3cm}}
+\rowcolor{table_head}\color{white}\textbf{后端类} & \color{white}\textbf{接口数} &
+\color{white}\textbf{页面数} & \color{white}\textbf{团队规模}\\
+\textbf{70+} & \textbf{39} & \textbf{16} & \textbf{4 人}\\
+\end{tabular}
+\end{center}
+
+\begin{warnbox}
+\textbf{特别说明：}本项目为课程设计实践，所有数据均为模拟数据，不涉及任何真实金融业务；系统中涉及的机构名称、业务数据与真实机构无关。
+\end{warnbox}
+
+% =====================================================================
+%                          二、技术栈
+% =====================================================================
+\chapter{技术栈}
+
+系统采用成熟稳定的主流技术体系，后端基于 Java 生态，前端基于 Vue 生态，AI 能力通过 Spring AI 独立封装。
+
+\begin{center}
+\renewcommand{\arraystretch}{1.42}
+\rowcolors{2}{table_alt}{white}
+\begin{longtable}{>{\raggedright\arraybackslash}p{3.2cm}
+>{\raggedright\arraybackslash}p{6.2cm} >{\centering\arraybackslash}p{3.4cm}}
+\rowcolor{table_head}\color{white}\textbf{分类} & \color{white}\textbf{技术名称} &
+\color{white}\textbf{版本}\\
+\endhead
+开发语言 & Java & 17 LTS\\
+后端框架 & Spring Boot & 3.2.5\\
+安全框架 & Spring Security & 6.x\\
+AI 框架 & Spring AI & 1.0.0-M4\\
+ORM 框架 & MyBatis-Plus & 3.5.6\\
+关系型数据库 & MySQL & 8.0\\
+对象存储 & MinIO & 8.5.10\\
+前端框架 & Vue & 3.4\\
+UI 组件库 & Ant Design Vue & 4.2\\
+状态管理 & Pinia & 2.1\\
+前端构建 & Vite & 5.4\\
+图表组件 & ECharts & 5.5\\
+接口文档 & Knife4j & 4.4.0\\
+项目构建 & Maven & 3.8+\\
+测试框架 & JUnit & 5.x\\
+\end{longtable}
+\end{center}
+
+% =====================================================================
+%                          三、系统架构
+% =====================================================================
+\chapter{系统架构}
+
+系统采用标准分层架构，前端通过 JWT 完成身份认证，后端按控制层、业务逻辑层、数据访问层分层设计，AI 能力以服务形式封装，与业务模块解耦。
+
+\begin{center}
+\begin{tikzpicture}[
+  node distance=8mm and 14mm,
+  box/.style={rectangle, rounded corners=3pt, minimum height=11mm,
+    minimum width=58mm, align=center, font=\small\bfseries,
+    text=white, drop shadow={shadow xshift=1.5pt, shadow yshift=-1.5pt, opacity=0.2}},
+  data/.style={cylinder, shape border rotate=90, aspect=0.28,
+    minimum height=14mm, minimum width=30mm, align=center,
+    font=\small\bfseries, text=white},
+  arr/.style={-{Stealth[length=3mm]}, line width=0.9pt, color=official_gray!60}
+]
+  \node[box, fill=official_green] (fe) {Vue 前端页面\\{\normalsize Vite · Ant Design Vue}};
+  \node[box, fill=official_blue, below=of fe] (sec) {Spring Security\\{\normalsize JWT 认证 · RBAC 授权}};
+  \node[box, fill=official_blue!80, below=of sec] (ctrl) {业务控制层 Controller};
+  \node[box, fill=official_blue!60, below=of ctrl] (svc) {业务逻辑层 Service};
+  \node[data, fill=official_blue!70, below left=10mm and 26mm of svc] (mysql) {MySQL\\数据库};
+  \node[data, fill=official_gray!70, below=10mm of svc] (minio) {MinIO\\对象存储};
+  \node[box, fill=official_red, minimum width=32mm, below right=10mm and 24mm of svc] (llm) {大模型服务};
+  \draw[arr] (fe)--(sec);
+  \draw[arr] (sec)--(ctrl);
+  \draw[arr] (ctrl)--(svc);
+  \draw[arr] (svc)--(mysql);
+  \draw[arr] (svc)--(minio);
+  \draw[arr] (svc)--(llm);
+\end{tikzpicture}
+\captionof{figure}{系统整体架构图}
+\end{center}
+
+\begin{infobox}[架构说明]
+请求链路为：\textbf{前端 JWT 认证 → 控制层 → 逻辑层 → 数据层}；大模型调用独立封装，支持同步对话、SSE 流式输出与图片生成，异常时自动降级为本地兜底回复。
+\end{infobox}
+
+% =====================================================================
+%                          四、功能模块
+% =====================================================================
+\chapter{功能模块}
+
+系统围绕银行零售业务，划分为 8 个功能模块，实现业务全流程闭环。
+
+\begin{center}
+\renewcommand{\arraystretch}{1.45}
+\rowcolors{2}{table_alt}{white}
+\begin{longtable}{>{\centering\arraybackslash}p{1.2cm}
+>{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{8.2cm}}
+\rowcolor{table_head}\color{white}\textbf{序号} & \color{white}\textbf{功能模块} &
+\color{white}\textbf{主要功能}\\
+\endhead
+1 & 用户管理 & 用户注册、登录认证、个人信息维护\\
+2 & 账户管理 & 账户查询、充值、账户流水、余额管理\\
+3 & 转账交易 & 行内转账、限额校验、交易记录查询\\
+4 & 账单管理 & 月度账单自动生成、收支明细查询\\
+5 & 贷款管理 & 贷款申请、审批、分期还款\\
+6 & 支票管理 & 支票开具、兑付、作废（管理员）\\
+7 & AI 智能客服 & 多会话管理、流式对话、上下文记忆、图片生成\\
+8 & 管理后台 & 数据统计、用户管理、账户管理、贷款审批\\
+\end{longtable}
+\end{center}
+
+% =====================================================================
+%                          五、项目结构
+% =====================================================================
+\chapter{项目结构}
+
+项目工程划分为后端工程、前端工程、数据库脚本与文档资源四大部分，整体结构如下（三层组织架构，直角连线）。
+
+\begin{center}
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=\linewidth]{figure1.png}
+\end{figure}
+\captionof{figure}{项目组织结构图}
+\end{center}
+
+% =====================================================================
+%                          六、项目成果
+% =====================================================================
+\chapter{项目成果}
+
+\begin{achbox}
+\begin{enumerate}[label=\textbf{\color{official_green}\arabic*.}]
+  \item 完成 \textbf{8 大功能模块}，实现银行业务全流程闭环，共交付 39 个接口、16 个页面；
+  \item AI 客服支持\textbf{流式输出与多轮上下文记忆}，通过系统提示词约束、敏感词过滤、防诈骗提醒保障输出安全；
+  \item 设计\textbf{大模型故障兜底机制}，服务异常时自动切换本地回复，保证系统稳定可用；
+  \item 转账功能通过\textbf{数据库事务与限额校验}，保障资金数据一致性；
+  \item 项目通过功能、接口及性能测试，\textbf{课程设计获评优秀}。
+\end{enumerate}
+\end{achbox}
+
+\section{关键工程问题与解决}
+\begin{itemize}
+  \item \tagdot{official_blue}{大模型同步调用阻塞主流程}：采用响应式编程与 SSE 流式返回，降低首字等待时间；
+  \item \tagdot{official_red}{输出越界与敏感信息诱导}：强约束 System Prompt + 敏感词过滤 + 防诈骗提醒三层防护；
+  \item \tagdot{official_gray}{大模型服务不可用}：异常自动降级为本地关键词规则引擎，客服服务不中断；
+  \item \tagdot{official_green}{转账并发数据一致性}：声明式事务 + 余额双重校验 + 限额前置拦截。
+\end{itemize}
+
+% =====================================================================
+%                          七、快速启动
+% =====================================================================
+\chapter{快速启动}
+
+\section{初始化数据库}
+依次执行 \texttt{sql} 目录下的建表脚本与初始化数据脚本。
+
+\section{配置参数（脱敏示例）}
+\begin{lstlisting}[style=yamlstyle]
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/online_bank?serverTimezone=Asia/Shanghai
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  ai:
+    openai:
+      api-key: ${LLM_API_KEY}
+      base-url: https://ark.example.com/api/v3
+jwt:
+  secret: ${JWT_SECRET}
+\end{lstlisting}
+
+\begin{warnbox}
+密钥、数据库口令等敏感信息\textbf{一律通过环境变量传入}，禁止明文写入配置文件或提交至代码仓库。
+\end{warnbox}
+
+\section{启动后端服务}
+\begin{codebox}
+mvn spring-boot:run
+\end{codebox}
+
+\section{启动前端服务}
+\begin{codebox}
+cd frontend
+npm install
+npm run dev
+\end{codebox}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.45}
+\rowcolors{2}{table_alt}{white}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4cm} >{\raggedright\arraybackslash}p{8cm}}
+\rowcolor{table_head}\color{white}\textbf{访问入口} & \color{white}\textbf{地址}\\
+前端页面 & \url{http://localhost:3000}\\
+接口文档 & \url{http://localhost:8080/doc.html}\\
+健康检查 & \url{http://localhost:8080/actuator/health}\\
+\end{tabular}
+\end{center}
+
+% =====================================================================
+%                          八、免责声明
+% =====================================================================
+\chapter{免责声明}
+
+\begin{infobox}[声明]
+本项目仅用于学习交流与技术研究。系统中涉及的机构名称、业务数据均为模拟数据，与真实机构无关；因使用本项目内容所引发的任何后果，由使用者自行承担。
+\end{infobox}
+
+\begin{center}
+\vspace{400pt}
+{\color{official_blue}\rule{0.4\textwidth}{1pt}}\\[10pt]
+{\small\color{official_gray} By BUAS}\\[4pt]
+{\footnotesize\color{official_gray!70} Dev Team · 2026}
+\end{center}
+
+\end{document}

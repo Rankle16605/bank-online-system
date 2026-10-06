@@ -1,0 +1,344 @@
+/* ========================================
+   ICBC 中国工商银行智能在线银行系统 - 全局设计规范 v2
+   遵循：阿里巴巴前端开发规范 + ICBC品牌视觉
+   配色理念：去渐变、纯色为主、金色点缀、专业克制
+   ======================================== */
+
+/* ===== CSS 变量 - ICBC 设计令牌 ===== */
+:root {
+  /* ICBC 品牌色 - 纯色、克制 */
+  --icbc-red: #C8102E;
+  --icbc-red-dark: #9B0023;
+  --icbc-red-bg: #FFF1F0;
+  --icbc-red-bg2: #FFE7E5;
+  --icbc-gold: #C4A265;
+  --icbc-gold-light: #D4AF37;
+  --icbc-gold-bg: #FFFBF0;
+
+  /* 功能色 */
+  --success-color: #52C41A;
+  --success-bg: #F6FFED;
+  --warning-color: #FAAD14;
+  --warning-bg: #FFFBE6;
+  --error-color: #FF4D4F;
+  --error-bg: #FFF2F0;
+  --info-color: #1890FF;
+  --info-bg: #E6F7FF;
+
+  /* 中性色 */
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-disabled: #BFBFBF;
+  --text-placeholder: #C0C4CC;
+
+  /* 背景色 */
+  --bg-white: #FFFFFF;
+  --bg-page: #F5F6FA;
+  --bg-hover: #FAFAFA;
+  --bg-active: #F0F0F0;
+  --bg-card: #FFFFFF;
+
+  /* 边框 */
+  --border-light: #EBEEF5;
+  --border-base: #DCDFE6;
+  --border-dark: #C0C4CC;
+
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  /* 阴影 - 克制、专业 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  /* 间距 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+
+  /* 字体 */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  --font-family-mono: "SF Mono", "Monaco", "Consolas", "Courier New", monospace;
+  --font-calligraphy: "Ma Shan Zheng", "STKaiti", "KaiTi", "楷体", serif;
+
+  /* 过渡 */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.4s ease;
+}
+
+/* ===== 全局重置 ===== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  height: 100%;
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 1.5715;
+  color: var(--text-primary);
+  background-color: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  height: 100%;
+}
+
+/* ===== 滚动条 ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #DCDFE6; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #C0C4CC; }
+
+/* ===== 通用工具类 ===== */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-primary { color: var(--icbc-red); }
+.text-success { color: var(--success-color); }
+.text-warning { color: var(--warning-color); }
+.text-error { color: var(--error-color); }
+.text-gold { color: var(--icbc-gold); }
+
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+
+/* 书法字体 */
+.font-calligraphy { font-family: var(--font-calligraphy); }
+
+/* ===== 通用页面标题 - 阿里巴巴风格 ===== */
+.page-header {
+  margin-bottom: 24px;
+  position: relative;
+  padding-left: 14px;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  background: var(--icbc-red);
+  border-radius: 2px;
+}
+.page-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+.page-header .subtitle {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+/* ===== 卡片 ===== */
+.card-hover {
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+.card-hover:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--icbc-red);
+}
+
+/* ===== 动画系统 - 克制、专业 ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeInUp   { animation: fadeInUp 0.45s ease both; }
+.animate-fadeIn     { animation: fadeIn 0.35s ease both; }
+.animate-zoomIn     { animation: zoomIn 0.25s ease both; }
+.animate-slideLeft  { animation: slideInLeft 0.35s ease both; }
+.animate-slideRight { animation: slideInRight 0.35s ease both; }
+.animate-countUp    { animation: countUp 0.5s ease both; }
+
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.40s; }
+
+/* ===== ICBC 金融风格元素 ===== */
+
+/* 银行卡片 - 纯色背景 */
+.bank-card {
+  background: var(--icbc-red-dark);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.bank-card::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -15%;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.bank-card::after {
+  content: '';
+  position: absolute;
+  bottom: -15%;
+  left: 8%;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* 统计数值 */
+.stat-value {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.stat-value.primary { color: var(--icbc-red); }
+.stat-value.success { color: var(--success-color); }
+.stat-value.warning { color: var(--warning-color); }
+
+/* 状态标签 */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.status-badge.active    { color: var(--success-color); background: var(--success-bg); }
+.status-badge.processing { color: var(--info-color); background: var(--info-bg); }
+.status-badge.warning   { color: var(--warning-color); background: var(--warning-bg); }
+
+/* 金额颜色 */
+.amount-positive { color: var(--error-color); font-weight: 500; }
+.amount-negative { color: var(--success-color); font-weight: 500; }
+
+/* ICBC 分割线 */
+.icbc-divider {
+  height: 1px;
+  background: var(--icbc-red);
+  opacity: 0.15;
+  margin: 16px 0;
+}
+
+/* ===== 页面过渡动画 ===== */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.page-enter-from { opacity: 0; transform: translateY(8px); }
+.page-leave-to   { opacity: 0; transform: translateY(-4px); }
+
+/* ===== PDF导出样式 ===== */
+.pdf-export-wrapper {
+  padding: 20px;
+  background: #ffffff;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #1A1A1A;
+}
+.pdf-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #C8102E;
+}
+.pdf-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.pdf-logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #C8102E;
+  letter-spacing: 2px;
+}
+.pdf-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+.pdf-header-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.pdf-info-row {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+}
+.pdf-info-row span:first-child { color: #666; min-width: 70px; }
+.pdf-info-row span:last-child  { color: #1A1A1A; font-weight: 500; }
+
+.pdf-exporting .ant-btn,
+.pdf-exporting .ant-pagination,
+.pdf-exporting .filter-bar,
+.pdf-exporting .no-print {
+  display: none !important;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+  .page-header h2 { font-size: 18px; }
+  .stat-value { font-size: 22px; }
+}

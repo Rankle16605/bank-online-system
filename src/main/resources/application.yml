@@ -1,0 +1,111 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: icbc-online-system
+  profiles:
+    active: dev
+
+  # 数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/icbc_online?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&characterEncoding=utf8mb4
+    username: root
+    password: ${DB_PASSWORD:your_password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1200000
+
+  # MyBatis-Plus配置
+  mybatis-plus:
+    configuration:
+      map-underscore-to-camel-case: true
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    global-config:
+      db-config:
+        id-type: auto
+        logic-delete-field: deleted
+        logic-delete-value: 1
+        logic-not-delete-value: 0
+
+  # Thymeleaf配置
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+
+  # AI配置 (火山引擎Doubao)
+  ai:
+    openai:
+      api-key: ${ARK_API_KEY:your-api-key}
+      base-url: https://ark.cn-beijing.volces.com/api/v3
+      chat:
+        options:
+          model: doubao-seed-1-8-251228
+          temperature: 0.7
+          max-tokens: 2000
+
+# MinIO配置
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: icbc-online
+
+# JWT配置
+jwt:
+  secret: ${JWT_SECRET:default-dev-secret-please-override-in-production}
+  expiration: 86400000  # 24小时
+  refresh-expiration: 604800000  # 7天
+
+# 应用配置
+app:
+  name: ICBC智能在线银行系统
+  version: 1.0.0
+  transfer:
+    single-limit: 50000.00       # 单笔转账限额
+    daily-limit: 200000.00       # 单日转账限额
+  ai-chat:
+    max-context-length: 10       # 最大上下文长度
+    session-expire-time: 1800    # 会话过期时间(秒)
+    enable-sensitive-filter: true # 启用敏感词过滤
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.icbc.online: DEBUG
+    org.springframework.security: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/icbc-online.log
+    max-size: 10MB
+    max-history: 30
+
+# Actuator监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+# Knife4j API文档
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  api-docs:
+    path: /v3/api-docs
