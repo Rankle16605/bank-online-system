@@ -1,11 +1,5 @@
 <div align="center">
 
-<br/>
-
-<img src="docs/banner.png" alt="智能在线银行系统" width="100%"/>
-
-<br/>
-<br/>
 
 # 🏦 智能在线银行
 
